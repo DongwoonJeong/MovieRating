@@ -61,7 +61,7 @@ public class MovieDAO implements MovieDaoInterface {
 		}
 		return false;
 	}
-
+	//helper method to get and return the logged in user ID
 	public int getUserId(String username) {
 
 		try {
@@ -79,30 +79,7 @@ public class MovieDAO implements MovieDaoInterface {
 		return -1;
 	}
 
-
-	@Override
-	public void getMovie() {
-
-		try {
-			PreparedStatement pstmt = connection.prepareStatement("    SELECT  movie.movie_id, movie.movie_name as Name,  AVG(rating_id) as Average_RATING, COUNT(instance_id) as Number_Rating\r\n"
-					+ "from Movie\r\n"
-					+ "	left JOIN Movie_instance USING ( movie_id )\r\n"
-					+ "        GROUP BY movie_id\r\n"
-					+ "    order by movie_id;");
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				int id = rs.getInt("movie_id");
-				String name = rs.getString("movie_name");
-
-				System.out.printf("%1s.%-20s%n",id,name);
-
-			}
-		} catch (SQLException e) {
-			System.out.println("");
-		}
-
-	}
-	
+	//for some reason, this statement wont work.
 	/*("SELECT movie_id, movie_name,  AVG(rating_id), COUNT(instance_id)"
 					+ "from Movie"
 					+ "inner JOIN Movie_instance USING(movie_id)"
@@ -138,6 +115,7 @@ public class MovieDAO implements MovieDaoInterface {
 
 	}
 
+	//rate the movie. take the input data, insert into the table.
 	@Override
 	public void rateMovie(int userId, int movieId, int rating) {
 		try {

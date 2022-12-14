@@ -19,6 +19,7 @@ public class Main {
 		String password = "";
 		boolean entryStatus = false;
 		int logInAttenpts = 0;
+		String regex = "^[_a-zA-Z0-9-\\.]+@[\\.a-zA-Z0-9-]+\\.[a-zA-Z]+$";
 		//start point		
 				System.out.println("\t Standalone Rating App \t\t"+
 						   "\n+=======================================+"+
