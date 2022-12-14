@@ -7,4 +7,5 @@ public interface MovieDaoInterface {
 	public void getMovie(String showTitle); //use showTitle to return the details of the Show.
 	public void Register(String username, String password); //create new entry for username and password
 	public void getAllmovie();
+	public void rateMovie(int userId, int movieId, int rating);
 }

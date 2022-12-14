@@ -62,7 +62,7 @@ public class MovieDAO implements MovieDaoInterface {
 		return false;
 	}
 
-	private int getUserId(String username) {
+	public int getUserId(String username) {
 
 		try {
 			PreparedStatement pstmt = connection.prepareStatement("Select user_id from Movie_user where user_name = ?");
@@ -104,21 +104,52 @@ public class MovieDAO implements MovieDaoInterface {
 	public void getAllmovie() {
 
 		try {
-			PreparedStatement pstmt = connection.prepareStatement("select * from Movie order by movie_id");
+			PreparedStatement pstmt = connection.prepareStatement("SELECT  movie_id , movie_name,  AVG(rating_id), COUNT(instance_id)"
+					+ "from Movie_instance"
+					+ "	INNER JOIN Movie USING (movie_id)"
+					+ "    GROUP BY movie_id"
+					+ "    order by movie_id;");
 
 			ResultSet rs = pstmt.executeQuery();
+			
+			System.out.println("\t Standalone Rating App \t\t"+
+					   "\n+===================================================+");
+			System.out.printf("%-20s%-16s%1s%n","Movie","Average Rating","Number of Ratings");
 			while (rs.next()) {
 				int id = rs.getInt("movie_id");
 				String name = rs.getString("movie_name");
-				Movie movie = new Movie(id, name);
-				
-				System.out.println(movie);
+				double avg = rs.getDouble("AVG(rating_id)");
+				int count = rs.getInt("COUNT(instance_id)");		   
+				System.out.printf("%1s.%-20s %-16s%1s%n",id,name,avg,count);
+//				Movie movie = new Movie(id, name);
+//				System.out.println(movie);
 
-			}
+			}System.out.println("\n+===================================================+");
 		} catch (SQLException e) {
 			System.out.println("service not availble at this time.");
 		}
 
 	}
+
+	@Override
+	public void rateMovie(int userId, int movieId, int rating) {
+		try {
+			PreparedStatement pstmt = connection
+					.prepareStatement("INSERT INTO Movie_instance(instance_id, user_id, movie_id, rating_id)" + "value(NULL,?,?,?)");
+			
+			pstmt.setInt(1, userId);
+			pstmt.setInt(2, movieId);
+			pstmt.setInt(3, rating);
+			pstmt.executeUpdate();
+			
+
+		} catch (Exception e) {
+			System.out.println("Something went wrong, cannot create new account");
+		}
+		
+	}
+	
+	
+	
 
 }

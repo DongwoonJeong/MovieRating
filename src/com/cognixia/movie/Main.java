@@ -7,6 +7,7 @@ import com.cognixia.connection.MovieDAO;
 import com.cognixia.exception.BadLoginCredentialsException;
 import com.cognixia.exception.MovieNotFoundException;
 
+import java.util.Date;
 import java.util.InputMismatchException;
 
 public class Main {
@@ -95,8 +96,8 @@ public class Main {
 					   "\n|2.RATE A MOVIE				|"+
 					   "\n|3.EXIT					|"+
 					   "\n+=======================================+");
-			String showName = "";
-			int status = 0;
+			
+			
 			try {
 				int toDo2 = Integer.parseInt(input.nextLine());
 				switch (toDo2) {
@@ -106,7 +107,30 @@ public class Main {
 					movieSql.getAllmovie();
 					break;
 				case 2:
-					
+					Date date = new Date();
+					movieSql.getAllmovie();
+					System.out.println("select movie from the list.");
+					int movieId = Integer.parseInt(input.nextLine());
+					System.out.println("\t Standalone Rating App \t\t"+
+							   "\n+==========================================+"+
+							   "\n|User: "+username +" Date:"+date+" |"+
+							   "\n|Selected Movie: "+movieId+		"  	  		   |"+
+							   "\n|Select Rating				   |"+
+							   "\n|0.Awful		  	           |"+
+							   "\n|1.Bad		  			   |"+
+							   "\n|2.Disappointing			   |"+
+							   "\n|3.Okay					   |"+
+							   "\n|4.Good					   |"+
+							   "\n|5.Great				   |"+
+							   "\n|6.EXIT					   |"+
+							   "\n+==========================================+");
+					int userId=movieSql.getUserId(username);
+					int rating = Integer.parseInt(input.nextLine());
+					if(rating <6) {
+					movieSql.rateMovie(userId, movieId, rating);
+					}else {
+						System.out.println("invalid input.");
+					}
 					break;
 					
 				case 3:
