@@ -81,32 +81,40 @@ public class MovieDAO implements MovieDaoInterface {
 
 
 	@Override
-	public void getMovie(String showTitle) {
+	public void getMovie() {
 
 		try {
-			PreparedStatement pstmt = connection.prepareStatement("select * from Movie where movie_name = ?;");
-			pstmt.setString(1, showTitle);
-
+			PreparedStatement pstmt = connection.prepareStatement("    SELECT  movie.movie_id, movie.movie_name as Name,  AVG(rating_id) as Average_RATING, COUNT(instance_id) as Number_Rating\r\n"
+					+ "from Movie\r\n"
+					+ "	left JOIN Movie_instance USING ( movie_id )\r\n"
+					+ "        GROUP BY movie_id\r\n"
+					+ "    order by movie_id;");
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				int id = rs.getInt("movie_id");
 				String name = rs.getString("movie_name");
-				Movie movie = new Movie(id, name);
-				System.out.println(movie);
+
+				System.out.printf("%1s.%-20s%n",id,name);
 
 			}
 		} catch (SQLException e) {
-			System.out.println("Movie with title = " + showTitle + " not found.");
+			System.out.println("");
 		}
 
 	}
+	
+	/*("SELECT movie_id, movie_name,  AVG(rating_id), COUNT(instance_id)"
+					+ "from Movie"
+					+ "inner JOIN Movie_instance USING(movie_id)"
+					+ "GROUP BY movie_id"
+					+ "order by movie_id;");*/
 	@Override
 	public void getAllmovie() {
 
 		try {
 			PreparedStatement pstmt = connection.prepareStatement("SELECT  movie_id , movie_name,  AVG(rating_id), COUNT(instance_id)"
-					+ "from Movie_instance"
-					+ "	INNER JOIN Movie USING (movie_id)"
+					+ "from Movie"
+					+ "	LEFT JOIN Movie_instance USING (movie_id)"
 					+ "    GROUP BY movie_id"
 					+ "    order by movie_id;");
 
@@ -121,8 +129,7 @@ public class MovieDAO implements MovieDaoInterface {
 				double avg = rs.getDouble("AVG(rating_id)");
 				int count = rs.getInt("COUNT(instance_id)");		   
 				System.out.printf("%1s.%-20s %-16s%1s%n",id,name,avg,count);
-//				Movie movie = new Movie(id, name);
-//				System.out.println(movie);
+
 
 			}System.out.println("\n+===================================================+");
 		} catch (SQLException e) {
